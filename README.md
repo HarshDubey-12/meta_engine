@@ -9,6 +9,7 @@
 
 - 🧠 Problem-aware system (not just a solver)
 - ⚙️ Modular architecture with swappable components
+- 🧱 Clear separation of concerns across decision, computation, execution, and infrastructure
 - 📊 Built-in logging for future ML-based optimization
 - 🔁 Designed for evolution → Rule-based → ML → Distributed systems
 - 🧩 Supports multiple computational paradigms (analytical, numerical, probabilistic, learning-based)
@@ -19,15 +20,23 @@
 
 Instead of directly solving physics problems, this system:
 
-1. **Analyzes** the structure of a problem  
-2. **Classifies** its complexity  
-3. **Selects** an appropriate computational model  
-4. **Executes** the solution  
-5. **Logs** decisions for future learning  
+1. **Ingests** input (text / file / structured data)  
+2. **Parses** and structures the problem  
+3. **Analyzes** the structure of a problem  
+4. **Classifies** its complexity  
+5. **Selects** an appropriate computational model  
+6. **Executes** the solution  
+7. **Builds** structured outputs  
+8. **Logs** decisions for future learning  
 
 ---
 
 ## 🏗️ System Architecture
+
+```text
+Input → Parser → Analyzer → Level Mapper → Model Selector
+      → Execution Engine → Output Builder → Logger → Storage
+```
 
 ### Component Breakdown
 
@@ -52,6 +61,124 @@ Instead of directly solving physics problems, this system:
 
 ---
 
+## 📁 Project Structure
+
+```text
+meta_engine/
+├── Data/
+│   ├── raw/
+│   └── processed/
+├── Outputs/
+├── config/
+├── src/
+│   ├── computations/
+│   ├── decision/
+│   ├── definitions/
+│   ├── execution/
+│   ├── infra/
+│   ├── interface/
+│   ├── models/
+│   └── output/
+├── tests/
+├── main.py
+└── README.md
+```
+
+---
+
+## 🧩 Core Architectural Layers
+
+### 1. Definitions Layer (`src/definitions/`)
+
+Defines reusable system schemas and blueprints:
+
+- Problem structure
+- Feature schema
+- Complexity levels
+- Output types
+
+> These describe the system's structure rather than runtime problem instances.
+
+---
+
+### 2. Decision Layer (`src/decision/`)
+
+Responsible for understanding and classifying problems:
+
+- Parser → structure extraction
+- Analyzer → feature extraction
+- Mapper → level classification
+- Model Selector → strategy selection
+
+---
+
+### 3. Models Layer (`src/models/`)
+
+Contains high-level computational strategies:
+
+- Analytical solvers
+- ODE-based models
+- Simulation models
+
+> Models orchestrate computation by combining lower-level primitives.
+
+---
+
+### 4. Computation Layer (`src/computations/`)
+
+Provides reusable mathematical and numerical primitives:
+
+- Linear algebra
+- Equation solving
+- Calculus
+- ODE methods (Euler, RK4)
+- Monte Carlo foundations
+
+---
+
+### 5. Execution Layer (`src/execution/`)
+
+Handles runtime execution logic:
+
+- `runner.py` → executes the selected model
+- `dispatcher.py` → maps model identifiers to implementations
+- `evaluator.py` → enables optional multi-model evaluation
+
+> This layer supports both single-model and future multi-model execution strategies.
+
+---
+
+### 6. Output System (`src/output/`)
+
+Responsible for structured result generation:
+
+- Scalar values
+- Time-series data
+- Visualization-ready data
+- Structured datasets
+
+---
+
+### 7. Infrastructure Layer (`src/infra/`)
+
+Handles external concerns:
+
+- Logging system
+- Database / storage integration
+
+> This keeps infrastructure concerns separate from physics logic.
+
+---
+
+### 8. Interface Layer (`src/interface/`)
+
+Defines how users interact with the system:
+
+- CLI interface
+- Input normalization
+
+---
+
 ## ⚙️ Implemented Models (Phase 1)
 
 - Analytical / Symbolic solvers  
@@ -70,6 +197,37 @@ Instead of directly solving physics problems, this system:
 → Model Selector: Numerical ODE  
 → Execution Engine: Runs simulation  
 → Logger: Stores decision, time, and outcome  
+
+---
+
+## 📤 Output System
+
+Outputs are treated as structured result objects rather than raw values.
+
+Supported output forms include:
+
+- Scalar outputs
+- Time-series data
+- Graphs / visualization-ready data
+- Structured datasets
+
+---
+
+## 📊 Data Flow
+
+### Raw Data
+
+- Stored in `Data/raw/`
+
+### Processed Data
+
+- Structured problem instances
+- Extracted features and mapped levels
+- Stored in `Data/processed/`
+
+### Outputs
+
+- Stored in `Outputs/`
 
 ---
 
@@ -169,6 +327,40 @@ This system follows a hybrid engineering approach:
 
 ---
 
+## 🧱 Architectural Principles
+
+### 1. Separation of Concerns
+
+Each layer is responsible for one part of the pipeline, which keeps the system easier to test, extend, and maintain.
+
+---
+
+### 2. Modular Monolith
+
+- Single codebase
+- Clean internal boundaries
+- Ready for future service-level decomposition if needed
+
+---
+
+### 3. Pluggable Architecture
+
+- Models can be added incrementally
+- Execution strategies can evolve
+- The selector can be replaced by ML-driven logic
+
+---
+
+### 4. Data-Driven Evolution
+
+Logging enables:
+
+- Performance analysis
+- ML-based model selection
+- Continuous system improvement
+
+---
+
 ## 🔩 Key Architectural Decisions
 
 ### 1. Swappable Model Selector
@@ -206,6 +398,20 @@ System operates on **model families**, not fixed implementations:
 - Deterministic (analytical, numerical)  
 - Probabilistic (Monte Carlo, Bayesian)  
 - Learning-based (ML models)  
+
+---
+
+## 🧠 Design Patterns Used
+
+| Layer     | Pattern            |
+| ----------| -------------------|
+| Decision  | Strategy           |
+| Models    | Strategy           |
+| Execution | Factory + Template |
+| Output    | Builder            |
+| Infra     | Repository         |
+| Interface | Facade             |
+| Flow      | Pipeline           |
 
 ---
 
