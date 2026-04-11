@@ -22,5 +22,5 @@ class RawProblem:
     raw_content: str
     input_type: str
     domain: str | None = None
-    constraints: list[str] = field(default_factory = list)
-    metadata: dict[str, object] = field(default_factory = dict)
+    constraints: list[str]=field(default_factory = list)
+    metadata: dict[str, object]=field(default_factory = dict)
