@@ -1,4 +1,9 @@
 """Problem structure definitions."""
+# Future changes:
+# - Add StructuredProblem when parser output needs a formal contract.
+# - Replace free-form input_type/domain strings with enums if values stabilize.
+# - Add validation only after real parser examples show what rules are needed.
+
 # Importing utilities 
 from dataclasses import dataclass, field
 

@@ -1,4 +1,9 @@
 """Feature schema definitions."""
+# Future changes:
+# - Add richer features such as equation_count, requires_calculus, and requires_iteration.
+# - Normalize enum values to machine-friendly lowercase strings if serialization becomes important.
+# - Keep this file focused on analyzer observations, not level or model-selection decisions.
+
 # importing utilities 
 from dataclasses import dataclass, field
 from enum import Enum
