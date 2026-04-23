@@ -200,6 +200,36 @@ Defines how users interact with the system:
 
 ---
 
+## Current Verified Slice
+
+The project now has a verified end-to-end ODE execution slice for projectile motion.
+
+Current manual pipeline:
+
+```text
+StructuredProblem
+-> ProblemFeatures
+-> Level Mapper
+-> Model Selector
+-> Dispatcher
+-> Runner
+-> ODE Model
+-> Euler Integrator
+-> Trajectory Output
+```
+
+What is currently verified:
+
+- Time-dependent projectile features map to `LEVEL_2`
+- `LEVEL_2` selects the `ODE` model family
+- The dispatcher returns the ODE model implementation
+- The runner executes the selected model
+- The ODE model uses Euler integration to generate trajectory points
+
+This slice is intentionally manual in places: parser and analyzer outputs are still constructed directly for now so the architecture can be validated before more automation is added.
+
+---
+
 ## 📤 Output System
 
 Outputs are treated as structured result objects rather than raw values.
