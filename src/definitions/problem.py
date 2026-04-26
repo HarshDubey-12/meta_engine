@@ -24,7 +24,7 @@ class RawProblem:
         id 
         timestamp 
     """
-    raw_content: str
+    raw_content: str | dict[str, object]
     input_type: str
     domain: str | None = None
     constraints: list[str] = field(default_factory=list)
@@ -53,4 +53,5 @@ class StructuredProblem:
     source_problem: RawProblem | None = None
     initial_state: dict[str, object] = field(default_factory=dict)
     parameters: dict[str, object] = field(default_factory=dict)
+    equations: list[str] = field(default_factory=list)
     constraints: list[str] = field(default_factory=list)
