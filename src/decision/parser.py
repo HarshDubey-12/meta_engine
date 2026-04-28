@@ -1,4 +1,10 @@
 """Parse raw inputs into structured chunks."""
+# Future changes:
+# - Expand text parsing from constrained key-value input to richer natural-language normalization.
+# - Replace branch-specific hardcoded field routing with reusable parsing utilities or parser strategies.
+# - Add richer equation parsing so symbolic structure can be preserved beyond plain equation strings.
+# - Support image/document input through OCR or document extraction before normalization.
+# - Keep parser focused on structure extraction only; feature inference belongs in analyzer.py.
 
 from src.definitions.problem import RawProblem, StructuredProblem
 
