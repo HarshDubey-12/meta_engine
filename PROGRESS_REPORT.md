@@ -1,8 +1,8 @@
 # Project Progress Report
 
 Project: `meta_engine`
-Report date: April 30, 2026
-Status scope: progress recorded up to the currently working parser-driven ODE vertical slice
+Report date: May 1, 2026
+Status scope: progress recorded up to the currently working parser-and-analyzer-driven ODE vertical slice
 
 ---
 
@@ -23,10 +23,10 @@ This report is meant to complement the main `README.md` by focusing on execution
 
 | Version | Focus Area | Current Status | Progress |
 | --- | --- | --- | --- |
-| V0.1 | Core definitions and decision contracts | In progress | 90% |
-| V0.2 | First executable ODE vertical slice | In progress | 95% |
-| V0.3 | Generic parser-driven input normalization | In progress | 90% |
-| V0.4 | Analyzer-driven feature extraction | Not started | 10% |
+| V0.1 | Core definitions and decision contracts | Complete for V1 scope | 100% |
+| V0.2 | First executable ODE vertical slice | Complete for V1 scope | 100% |
+| V0.3 | Generic parser-driven input normalization | Complete for V1 scope | 100% |
+| V0.4 | Analyzer-driven feature extraction | In progress | 75% |
 | V0.5 | Structured outputs and reporting | Not started | 5% |
 | V0.6 | Broader model coverage and test hardening | Not started | 10% |
 
@@ -104,7 +104,7 @@ Progress: 85%
 
 ### Version 0.1 Completion Estimate
 
-90%
+100%
 
 This version is functionally successful for current scope, but still depends on manual feature construction because the analyzer is not yet implemented.
 
@@ -189,7 +189,7 @@ Progress: 100% for the current single-slice target
 
 ### Version 0.2 Completion Estimate
 
-95%
+100%
 
 This version has achieved its core purpose. Remaining work is mostly generalization and cleanup rather than proof-of-concept viability.
 
@@ -271,9 +271,21 @@ Progress: 85%
 
 Progress: 100%
 
+### Date-wise Changes
+
+#### May 1, 2026
+
+- Introduced the analyzer into the live runtime pipeline.
+- Replaced manual `ProblemFeatures` construction in `main.py` with `analyze_problem(structured_problem)`.
+- Confirmed that parser branches and analyzer output work together across:
+  - `data`
+  - `text`
+  - `equation`
+- Verified that all three input forms still produce the same downstream ODE execution result.
+
 ### Version 0.3 Completion Estimate
 
-90%
+100%
 
 This version is operational for constrained input formats. It is not yet a free-form natural language or symbolic parser, but the architecture is correct and validated.
 
@@ -299,13 +311,27 @@ Replace manual `ProblemFeatures` creation with a real analyzer that reads `Struc
 
 ### Progress So Far
 
-- Analyzer target is conceptually defined.
-- The parser now produces enough structure for analyzer implementation to begin.
-- No production analyzer logic has been implemented yet.
+- Analyzer entry point has been implemented.
+- Analyzer now reads `StructuredProblem` and produces `ProblemFeatures`.
+- Current analyzer supports the `projectile_problem` branch.
+- Representation type is derived from the parser source input type.
+- Known variables are derived from structured state and parameter keys.
+- The analyzer is now used in the live `main.py` pipeline.
+
+### Date-wise Changes
+
+#### May 1, 2026
+
+- Implemented the first manual deterministic analyzer in `src/decision/analyzer.py`.
+- Replaced manual feature setup in `main.py` with analyzer-driven feature extraction.
+- Verified end-to-end pipeline across all three parser branches with analyzer included.
+- Confirmed that the analyzer-driven pipeline still maps the projectile case to:
+  - `ComplexityLevel.LEVEL_2`
+  - `ModelType.ODE`
 
 ### Version 0.4 Completion Estimate
 
-10%
+75%
 
 This is the next major execution milestone.
 
@@ -403,6 +429,7 @@ This version has early groundwork, but most of its long-term scope remains ahead
 ### What Is Working Today
 
 - core schema definitions
+- rule-based analyzer
 - rule-based mapper
 - rule-based model selector
 - callable dispatcher
@@ -413,33 +440,34 @@ This version has early groundwork, but most of its long-term scope remains ahead
   - data
   - text
   - equation
+- analyzer-driven feature extraction for the projectile problem
 - parser tests
 - mapper and selector tests
 - integration-style vertical slice test
 - `main.py` cross-verification of all three parser branches
+- parser-and-analyzer-driven end-to-end ODE execution
 
 ### What Is Still Manual
 
-- feature extraction
-- analyzer logic
+- analyzer logic beyond the projectile branch
 - broader model family implementations
 - structured output builder
 - richer execution evaluation modes
 
 ### Overall Project Progress Estimate
 
-45%
+55%
 
-This estimate reflects that the first real slice is proven and the parser architecture is in place, but several core planned layers are still either manual or only partially implemented.
+This estimate reflects that the first real slice is now proven through parser and analyzer layers, but several broader project goals are still either manual, single-branch, or only partially implemented.
 
 ---
 
 ## Immediate Next Recommended Version Work
 
-1. Version 0.4: implement `analyzer.py`
-2. route `main.py` through parser and analyzer together
-3. add Euler-specific and ODE-model-specific tests
-4. begin output structuring work
+1. Expand analyzer support beyond `projectile_problem`
+2. Add Euler-specific and ODE-model-specific tests
+3. Begin output structuring work
+4. Decide the next executable slice beyond the current ODE projectile path
 
 ---
 
@@ -457,4 +485,48 @@ This estimate reflects that the first real slice is proven and the parser archit
 | April 21, 2026 | First end-to-end ODE execution validated |
 | April 29, 2026 | Tests and documentation scaffolding added |
 | April 30, 2026 | Generic parser branches implemented and cross-verified in `main.py` |
+| May 1, 2026 | Analyzer implemented and integrated into the live end-to-end pipeline |
 
+---
+
+## Version 1 Milestone
+
+### Status
+
+Completed for the chosen deterministic scope.
+
+### Definition of Version 1 Completion
+
+Version 1 is considered complete as a deterministic, rule-based, end-to-end vertical slice for projectile ODE problems across:
+
+- `data` input
+- `text` input
+- `equation` input
+
+### What Version 1 Now Includes
+
+- `RawProblem`
+- parser with multiple input branches
+- `StructuredProblem`
+- analyzer
+- `ProblemFeatures`
+- mapper
+- model selector
+- dispatcher
+- runner
+- executable ODE model
+- Euler integrator
+- `main.py` runtime verification across all three parser branches
+
+### What Version 1 Does Not Yet Claim
+
+- general free-form NLP understanding
+- broad domain coverage
+- intelligent model selection
+- multi-model execution
+- distributed execution
+- completed analytical and simulation runtime paths
+
+### Version 1 Completion Estimate
+
+100%
