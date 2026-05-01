@@ -3,12 +3,7 @@
 from src.decision.parser import parse_raw_problem
 from src.decision.mapper import map_features_to_level
 from src.decision.model_selector import select_model_for_level
-from src.definitions.features import (
-    DependencyType,
-    MathematicalNature,
-    ProblemFeatures,
-    RepresentationType,
-)
+from src.decision.analyzer import analyze_problem
 from src.definitions.problem import RawProblem
 from src.execution.dispatcher import dispatch_model
 from src.execution.runner import run_model
@@ -93,21 +88,9 @@ def build_raw_problem(case_name: str) -> RawProblem:
 
     raise ValueError(f"Unsupported case_name: {case_name}")
 
-
-def build_features() -> ProblemFeatures:
-    return ProblemFeatures(
-        known_variables=["x", "y", "vx", "vy", "gravity"],
-        unknown_variables=["trajectory"],
-        dependency_type=DependencyType.TIME,
-        mathematical_nature=MathematicalNature.LINEAR,
-        variable_count=4,
-        representation_type=RepresentationType.EQUATION,
-    )
-
-
 def run_pipeline(raw_problem: RawProblem) -> dict[str, object]:
     structured_problem = parse_raw_problem(raw_problem)
-    features = build_features()
+    features = analyze_problem(structured_problem)
 
     level = map_features_to_level(features)
     model_type = select_model_for_level(level)
