@@ -18,10 +18,12 @@ def _parse_data_problem(raw_problem: RawProblem) -> StructuredProblem:
 
     problem_type = content.get("problem_type")
     output_type = content.get("output_type")
+    domain = content.get("domain", raw_problem.domain)
     initial_state = content.get("initial_state", {})
     parameters = content.get("parameters", {})
     equations = content.get("equations", [])
     constraints = content.get("constraints", raw_problem.constraints)
+    simulation_config = content.get("simulation_config", {})
 
     if not problem_type:
         raise ValueError("problem_type is required in data input.")
@@ -35,16 +37,19 @@ def _parse_data_problem(raw_problem: RawProblem) -> StructuredProblem:
         raise ValueError("equations must be a list.")
     if not isinstance(constraints, list):
         raise ValueError("constraints must be a list.")
+    if not isinstance(simulation_config, dict):
+        raise ValueError("simulation_config must be a dictionary.")
 
     return StructuredProblem(
         problem_type=problem_type,
         output_type=output_type,
-        domain=raw_problem.domain,
+        domain=domain,
         source_problem=raw_problem,
         initial_state=initial_state,
         parameters=parameters,
         equations=equations,
         constraints=constraints,
+        simulation_config=simulation_config,
     )
 
 

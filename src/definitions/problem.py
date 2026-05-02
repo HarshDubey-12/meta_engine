@@ -55,3 +55,4 @@ class StructuredProblem:
     parameters: dict[str, object] = field(default_factory=dict)
     equations: list[str] = field(default_factory=list)
     constraints: list[str] = field(default_factory=list)
+    simulation_config: dict[str, object] = field(default_factory=dict)
