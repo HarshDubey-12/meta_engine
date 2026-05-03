@@ -4,31 +4,51 @@
 # - Use richer analyzer features, such as equation_count or requires_iteration, to reduce weak guesses.
 # - Keep this file responsible only for feature-to-level mapping, not model selection or execution.
 
-from src.definitions.features import ProblemFeatures, DependencyType, MathematicalNature, RepresentationType
+from src.definitions.features import (
+    DependencyType,
+    MathematicalNature,
+    ProblemFeatures,
+    RepresentationType,
+)
 from src.definitions.level import ComplexityLevel
 
-def map_features_to_level(features: ProblemFeatures) -> ComplexityLevel:
-    "maps extracted problem to a level."
 
-    # Safety Check
+def map_features_to_level(features: ProblemFeatures) -> ComplexityLevel:
+    """Map extracted problem features to a complexity level."""
+
     if features is None:
         return ComplexityLevel.UNKNOWN
-    
-    # Rule 1: Dynamic Simulation problems (highest complexity)
-    if features.dependency_type == DependencyType.TIME_AND_SPACE and features.mathematical_nature == MathematicalNature.NONLINEAR:
+
+    dynamic_dependencies = {
+        DependencyType.TIME,
+        DependencyType.SPACE,
+        DependencyType.TIME_AND_SPACE,
+    }
+
+    # Rule 1: nonlinear dynamic systems require simulation-style handling
+    if (
+        features.dependency_type in dynamic_dependencies
+        and features.mathematical_nature == MathematicalNature.NONLINEAR
+    ):
         return ComplexityLevel.LEVEL_3
-    
-    # Rule 2: Calculus/ODE problems 
-    if features.dependency_type == DependencyType.TIME:
+
+    # Rule 2: dynamic but not nonlinear systems fit the ODE/calculus path
+    if features.dependency_type in dynamic_dependencies:
         return ComplexityLevel.LEVEL_2
-    
-    # Rule 3: multivariable analytical problems 
-    if features.representation_type == RepresentationType.EQUATION and features.variable_count>3 :
+
+    # Rule 3: multi-variable analytical problems
+    if (
+        features.representation_type == RepresentationType.EQUATION
+        and features.variable_count > 3
+    ):
         return ComplexityLevel.LEVEL_1
-    
-    # Rule 4: Direct formula problems
-    if features.representation_type in (RepresentationType.TEXT, RepresentationType.EQUATION):
+
+    # Rule 4: direct formula problems
+    if features.representation_type in (
+        RepresentationType.TEXT,
+        RepresentationType.EQUATION,
+        RepresentationType.DATA,
+    ):
         return ComplexityLevel.LEVEL_0
-    
-    # Fallback
+
     return ComplexityLevel.UNKNOWN
