@@ -10,11 +10,12 @@ from collections.abc import Callable
 from src.decision.model_selector import ModelType
 from src.definitions.problem import StructuredProblem
 from src.models.ode import solve_ode_problem
+from src.models.simulation import solve_simulation_problem
 
 
 def dispatch_model(
     model_type: ModelType,
-) -> Callable[[StructuredProblem], list[dict[str, float]]]:
+) -> Callable[[StructuredProblem], object]:
     """Return the executable model implementation for the selected model type."""
 
     if model_type is None:
@@ -22,5 +23,8 @@ def dispatch_model(
 
     if model_type == ModelType.ODE:
         return solve_ode_problem
+
+    if model_type == ModelType.SIMULATION:
+        return solve_simulation_problem
 
     raise ValueError(f"Unsupported model type: {model_type}")
