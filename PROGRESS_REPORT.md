@@ -1,8 +1,8 @@
 # Project Progress Report
 
 Project: `meta_engine`
-Report date: May 1, 2026
-Status scope: progress recorded up to the currently working parser-and-analyzer-driven ODE vertical slice
+Report date: May 13, 2026
+Status scope: progress recorded up to the current multi-domain rule-based solver pipeline with ODE and simulation execution
 
 ---
 
@@ -26,9 +26,9 @@ This report is meant to complement the main `README.md` by focusing on execution
 | V0.1 | Core definitions and decision contracts | Complete for V1 scope | 100% |
 | V0.2 | First executable ODE vertical slice | Complete for V1 scope | 100% |
 | V0.3 | Generic parser-driven input normalization | Complete for V1 scope | 100% |
-| V0.4 | Analyzer-driven feature extraction | In progress | 75% |
+| V0.4 | Analyzer-driven feature extraction | Active and broadened | 90% |
 | V0.5 | Structured outputs and reporting | Not started | 5% |
-| V0.6 | Broader model coverage and test hardening | Not started | 10% |
+| V0.6 | Broader model coverage and test hardening | Active | 55% |
 
 Percentages are approximate engineering progress indicators, not formal delivery guarantees.
 
@@ -283,6 +283,12 @@ Progress: 100%
   - `equation`
 - Verified that all three input forms still produce the same downstream ODE execution result.
 
+#### May 2, 2026
+
+- Committed the initial parser-driven orchestration milestone.
+- Locked in the `RawProblem -> parser -> StructuredProblem` runtime path as the normal entry route into the system.
+- Preserved the earlier cross-verification goal by keeping `data`, `text`, and `equation` paths aligned to one common downstream contract.
+
 ### Version 0.3 Completion Estimate
 
 100%
@@ -329,11 +335,32 @@ Replace manual `ProblemFeatures` creation with a real analyzer that reads `Struc
   - `ComplexityLevel.LEVEL_2`
   - `ModelType.ODE`
 
+#### May 3, 2026
+
+- Expanded the rule-based decision logic beyond the initial projectile-only assumptions.
+- Introduced clearer feature-to-level mapping rules to separate:
+  - dynamic linear problems
+  - dynamic nonlinear problems
+- Positioned the analyzer and mapper to support broader problem families without making the mapper depend on specific problem names.
+
+#### May 13, 2026
+
+- Refined analyzer inference so it now derives features from `StructuredProblem` more generically instead of only echoing a narrow manual branch.
+- Added helper inference logic for:
+  - representation type
+  - dependency type
+  - mathematical nature
+- Aligned analyzer output with broader solver coverage, including:
+  - `projectile_problem`
+  - `projectile_problem_with_drag`
+  - `rc_circuit_problem`
+  - `cooling_problem`
+
 ### Version 0.4 Completion Estimate
 
-75%
+90%
 
-This is the next major execution milestone.
+This version is now functionally strong for rule-based operation, though it is still not an intelligent analyzer and does not yet support free-form semantic reasoning.
 
 ---
 
@@ -400,6 +427,49 @@ Expand beyond the first ODE slice while increasing reliability through stronger 
   - `tests/test_parser.py`
 - Established testing intent documentation in `tests/README.md`.
 
+#### May 5, 2026
+
+- Added the first simulation-oriented model structure.
+- Extended `StructuredProblem` with `simulation_config` to support simulation-specific runtime controls without overloading core state fields.
+- Added the first broader model abstractions needed to move beyond the original single-slice projectile path.
+
+#### May 7, 2026
+
+- Implemented a generic Monte Carlo computation primitive in `src/computations/monte_carlo.py`.
+- Established a reusable computation-layer pattern for repeated stochastic trials independent of any one physics domain.
+
+#### May 9, 2026
+
+- Added dispatcher support for multiple executable model families instead of only the ODE path.
+- Prepared the execution layer to route problems to either deterministic ODE handling or simulation handling.
+
+#### May 11, 2026
+
+- Added and committed vertical slice integration testing focused on live orchestration behavior.
+- Strengthened the test path around real module communication instead of isolated logic only.
+
+#### May 13, 2026
+
+- Upgraded the runtime from a narrow projectile demonstration to a broader multi-domain rule-based solver path.
+- Expanded `src/models/ode.py` so the ODE path now supports:
+  - `projectile_problem`
+  - `rc_circuit_problem`
+  - `cooling_problem`
+- Strengthened `src/models/simulation.py` so the simulation path now supports nonlinear projectile drag and real Monte Carlo sampling behavior.
+- Updated `main.py` to demonstrate a broader set of working cases:
+  - projectile through `data`
+  - projectile through `text`
+  - projectile through `equation`
+  - projectile with drag through simulation
+  - RC circuit through ODE
+  - cooling through ODE
+- Updated `tests/test_vertical_slices.py` to validate the new broader execution coverage.
+- Re-ran:
+  - `python main.py`
+  - `python -m pytest tests/test_vertical_slices.py`
+  - `python -m pytest tests/test_parser.py`
+- Verified that the broadened pipeline is working end-to-end.
+
 ### Current Progress
 
 #### Test Coverage
@@ -407,20 +477,23 @@ Expand beyond the first ODE slice while increasing reliability through stronger 
 - mapper tests: present
 - model selector tests: present
 - vertical slice integration test: present
-- computation and model-specific tests still incomplete
+- parser regression tests still passing after broader runtime integration
+- computation and model-specific unit tests still incomplete
 
-Progress: 40%
+Progress: 60%
 
 #### Model Family Breadth
-- only ODE path is executable
+- ODE path is executable across more than one domain family
+- simulation path is executable for the nonlinear drag case
+- analytical and symbolic runtime paths remain unimplemented
 
-Progress: 15%
+Progress: 50%
 
 ### Version 0.6 Completion Estimate
 
-10%
+55%
 
-This version has early groundwork, but most of its long-term scope remains ahead.
+This version has moved out of groundwork stage and now has a real second execution family, but still needs much deeper breadth and model-specific hardening.
 
 ---
 
@@ -436,38 +509,42 @@ This version has early groundwork, but most of its long-term scope remains ahead
 - runner execution path
 - Euler numerical integrator
 - ODE projectile model
+- ODE support for RC-circuit-style and cooling-style first-order problems
+- simulation support for nonlinear projectile drag
+- generic Monte Carlo computation primitive
 - parser-driven normalization for:
   - data
   - text
   - equation
-- analyzer-driven feature extraction for the projectile problem
+- analyzer-driven feature extraction for multiple manually supported problem families
 - parser tests
 - mapper and selector tests
 - integration-style vertical slice test
-- `main.py` cross-verification of all three parser branches
-- parser-and-analyzer-driven end-to-end ODE execution
+- `main.py` cross-verification of three parser branches plus broader domain execution
+- parser-and-analyzer-driven end-to-end ODE and simulation execution
 
 ### What Is Still Manual
 
-- analyzer logic beyond the projectile branch
-- broader model family implementations
+- analyzer logic is still rule-based and manually encoded
+- text/equation parsing is still constrained and not broadly domain-generic
+- analytical and symbolic runtime families are still not implemented
 - structured output builder
 - richer execution evaluation modes
 
 ### Overall Project Progress Estimate
 
-55%
+68%
 
-This estimate reflects that the first real slice is now proven through parser and analyzer layers, but several broader project goals are still either manual, single-branch, or only partially implemented.
+This estimate reflects that the project has moved beyond a single verified slice into broader multi-domain rule-based execution, while still leaving intelligence, richer parsing, and output formalization for later versions.
 
 ---
 
 ## Immediate Next Recommended Version Work
 
-1. Expand analyzer support beyond `projectile_problem`
-2. Add Euler-specific and ODE-model-specific tests
-3. Begin output structuring work
-4. Decide the next executable slice beyond the current ODE projectile path
+1. Add model-specific unit tests for ODE and simulation behaviors
+2. Expand constrained text/equation parsing beyond the original projectile-oriented field set
+3. Begin structured output/result-object work
+4. Decide whether Version 2 prioritizes analytical execution, richer simulation families, or intelligent parsing
 
 ---
 
@@ -486,6 +563,13 @@ This estimate reflects that the first real slice is now proven through parser an
 | April 29, 2026 | Tests and documentation scaffolding added |
 | April 30, 2026 | Generic parser branches implemented and cross-verified in `main.py` |
 | May 1, 2026 | Analyzer implemented and integrated into the live end-to-end pipeline |
+| May 2, 2026 | Parser-driven orchestration milestone committed |
+| May 3, 2026 | Decision mapping and analysis logic broadened |
+| May 5, 2026 | Simulation structure and ODE abstraction milestones committed |
+| May 7, 2026 | Generic Monte Carlo computation module added |
+| May 9, 2026 | Multi-model dispatcher committed |
+| May 11, 2026 | Vertical slice integration tests added |
+| May 13, 2026 | Main orchestration expanded to multi-domain ODE and simulation coverage |
 
 ---
 
@@ -517,6 +601,7 @@ Version 1 is considered complete as a deterministic, rule-based, end-to-end vert
 - executable ODE model
 - Euler integrator
 - `main.py` runtime verification across all three parser branches
+- initial multi-domain ODE/simulation orchestration groundwork beyond the original projectile-only slice
 
 ### What Version 1 Does Not Yet Claim
 
@@ -526,6 +611,7 @@ Version 1 is considered complete as a deterministic, rule-based, end-to-end vert
 - multi-model execution
 - distributed execution
 - completed analytical and simulation runtime paths
+- intelligent analyzer or parser behavior
 
 ### Version 1 Completion Estimate
 
